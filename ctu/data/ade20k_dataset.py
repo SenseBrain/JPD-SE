@@ -141,9 +141,6 @@ class ADE20KDataset(CTUDataset):
 
       label_tensor[label_tensor == 255] = self.opt.num_labels  # 'unknown' is opt.num_labels
 
-      # (shiyu) conversion to one-hot tensors is much faster on GPU, so perform this 
-      # preprocessing in model's preprocess method instead
-      
     # get instance label map 
     if self.opt.no_instance:
       instance_tensor = 0
@@ -151,7 +148,6 @@ class ADE20KDataset(CTUDataset):
       # instance = Image.open(instance_path)
 
       if self.opt.no_label:
-        # (shiyu) instance label map and label map use the same transform
         transform_ins = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
       else:
         transform_ins = transform_label

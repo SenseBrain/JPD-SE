@@ -65,7 +65,6 @@ def get_transform(opt, params, method=Image.BICUBIC, normalize_mean=None, normal
   if opt.preprocess_mode == 'none':
     base = 32
 
-    # (shiyu)
     # base = 2
     transform_list.append(transforms.Lambda(lambda img: _make_power_2(img, base, method)))
 

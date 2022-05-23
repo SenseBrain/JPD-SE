@@ -23,7 +23,6 @@ parser.print_options(opt)
 print('\nval options:\n')
 parser.print_options(val_opt)
 
-# (shiyu) fully deterministic, usually causes slower runtime
 if opt.seed:
   import random
   random.seed(opt.seed)

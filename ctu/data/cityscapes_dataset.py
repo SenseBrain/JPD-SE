@@ -21,8 +21,6 @@ class CityscapesDataset(CTUDataset):
     parser.set_defaults(crop_size=512)
     parser.set_defaults(aspect_ratio=2.0)
     parser.set_defaults(num_labels=35)
-    # (shiyu)
-    # cityscapes trainset imgs (without cropping): mean (0.2869, 0.3252, 0.2839), std (0.1761, 0.1810, 0.1777)
     
     opt, _ = parser.parse_known_args()
 
