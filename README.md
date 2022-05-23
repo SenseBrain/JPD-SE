@@ -19,7 +19,7 @@ If you want to get the MS-SSIM values when testing, you will need to install [th
 
 The main functions *will break* if you use ```torch<=0.4.1``` but should work just fine otherwise.
 
-Although, we have only run the tests under this exact setting so we cannot guarantee that everything would work as expected in a different set-up.
+Although, we have only run tests under this exact setting so we cannot guarantee that everything would work as expected in a different set-up.
 
 # Installation
 
@@ -35,3 +35,5 @@ We provide example scripts for training and testing BPG-based models in [scripts
 # Pre-Trained Models
 
 We provide several pre-trained BPG-based models with quality factors 33, 36, 39, and 42 [here](https://drive.google.com/drive/folders/1qUEU78ZggAG-oSGVQszszIsnYyDjlMNg?usp=sharing). 
+
+The Cityscapes test data used in the paper is provided in [datasets/](datasets/). 
