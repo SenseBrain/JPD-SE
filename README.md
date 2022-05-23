@@ -28,6 +28,10 @@ Although, we have only run the tests under this exact setting so we cannot guara
 - dev mode: `pip install -e .`
 - normal mode: `pip install .`
 
-# TODO
-* Share pre-trained phase 1 model pix_novis_nodistortion_newnormalization_1024
-* Share pre-trained BPG test models
+# Train/Test
+
+We provide example scripts for training and testing BPG-based models in [scripts/](scripts/).
+
+# Pre-Trained Models
+
+We provide several pre-trained BPG-based models with quality factors 33, 36, 39, and 42 [here](https://drive.google.com/drive/folders/1qUEU78ZggAG-oSGVQszszIsnYyDjlMNg?usp=sharing). 

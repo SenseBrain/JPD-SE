@@ -6,7 +6,6 @@ approximated by 1. Originally proposed in 'Lossy Image Compression with Compress
 import torch
 
 class RoundedIdentity(torch.autograd.Function):
-  # TODO tests
   @staticmethod
   def forward(ctx, input):
     return torch.round(input)

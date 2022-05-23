@@ -10,7 +10,6 @@ import torch
 import torch.nn as nn
 from torch.autograd import Function
 
-# TODO tests
 class SoftSignFunction(Function):
 
   def __init__(self):
@@ -26,8 +25,6 @@ class SoftSignFunction(Function):
 
   @staticmethod
   def backward(ctx, grad_output):
-    # TODO (cywu): consider passing 0 for tanh(x) > 1 or tanh(x) < -1? 
-    # See https://arxiv.org/pdf/1712.05087.pdf. 
     return grad_output
 
 

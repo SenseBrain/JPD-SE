@@ -1,5 +1,7 @@
 Q=33; # quality factor for bpg
 
+# this script assumes that phase 1 model has been trained and saved in pix_novis_nodistortion_1024 and performs phase 2 & 3 training
+
 python train.py --dataset cityscapes --root_dir /path/to/rootdir/ --model pix2pixHD --tf_log --no_label_encoding --no_feat_encoding --num_epochs 1 --use_gt_semantics --val_interval 1 --val_preprocess_mode fixed --val_load_size 1024 --val_crop_size 1024 --preprocess_mode fixed --load_size 1024 --crop_size 1024 --seed 1234 --no_generator_binarization --use_compressed --normalize_mean '.5,.5,.5' --normalize_std '1.,1.,1.' --load_model --checkpoints_dir pix_novis_nodistortion_1024/ --save_dir pix_bpgq${Q}_1024_phase2 --quality ${Q} --ext bpg --gpu_ids 5 --always_save; 
 
 python train.py --dataset cityscapes --root_dir /path/to/rootdir/ --model pix2pixHD --tf_log --no_label_encoding --no_feat_encoding --num_epochs 29 --use_gt_semantics --val_interval 1 --val_preprocess_mode fixed --val_load_size 1024 --val_crop_size 1024 --preprocess_mode fixed --load_size 1024 --crop_size 1024 --seed 1234 --no_generator_binarization --use_compressed --normalize_mean '.5,.5,.5' --normalize_std '1.,1.,1.' --load_model --checkpoints_dir pix_bpgq${Q}_1024_phase2 --save_dir pix_bpgq${Q}_1024_phase2 --quality ${Q} --ext bpg --gpu_ids 5; 
