@@ -210,16 +210,11 @@ class CTUParser:
       return self.opt
     
     opt = self._gather_options()
-    # (shiyu) self.is_train is set in train_opts.py or test_opts.py
     opt.is_train = self.is_train
     if opt.is_train and opt.save_dir is not None:
-      # (shiyu) only saves train opts
       self.save_options(opt)
     
-    # only toderici2017 has the semantics_mode param at this point
-    # TODO makes more sense to set this in toderici2017 
     if opt.model == 'toderici2017' and opt.semantics_mode == 'none':
-      # (shiyu) this makes data loading/preprocessing faster
       opt.no_instance = True
       opt.no_label = True
  

@@ -9,7 +9,6 @@ from ctu.models.pix2pixHD_model import Pix2PixHDModel
 from ctu.trainers.base_trainer import BaseTrainer
 
 class Pix2PixHDTrainer(BaseTrainer):
-  # TODO DataParallel
   def __init__(self, opt, mode='train'):
     super(Pix2PixHDTrainer, self).__init__(opt, mode)
     if len(opt.gpu_ids) > 0:
@@ -65,7 +64,6 @@ class Pix2PixHDTrainer(BaseTrainer):
     self.optimizer_G.zero_grad()
     if self.opt.fp16:                                
       from apex import amp
-      # TODO (shiyu) figure out how this works
       with amp.scale_loss(loss_G, self.optimizer_G) as scaled_loss: scaled_loss.backward()                
     else:
       loss_G.backward()          
@@ -74,7 +72,6 @@ class Pix2PixHDTrainer(BaseTrainer):
     # update discriminator weights
     self.optimizer_D.zero_grad()
     if self.opt.fp16:                                
-      # TODO (shiyu) figure out how this works
       with amp.scale_loss(loss_D, self.optimizer_D) as scaled_loss: scaled_loss.backward()                
     else:
       loss_D.backward()        
@@ -145,7 +142,6 @@ class Pix2PixHDTrainer(BaseTrainer):
     print('\nloading checkpoints from {}...\n'.format(self.opt.checkpoints_dir))
     save_file = os.path.join(self.opt.checkpoints_dir, 'stats_and_optim.pt')
     if self.model.use_gpu():
-      # TODO support multi-gpu
       stats_and_optim = torch.load(save_file, map_location='cuda:'+str(self.opt.gpu_ids[0]))
     else:
       stats_and_optim = torch.load(save_file, map_location='cpu')

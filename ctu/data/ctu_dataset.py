@@ -66,8 +66,6 @@ class CTUDataset(BaseDataset):
         "A subclass of CTUDataset must override self.get_paths(self, opt)")
 
   def paths_match(self, path1, path2):
-    # NOTE (shiyu) depending on how the files are named, this check may not work for your
-    # dataset: overwrite if necessary
     filename1_without_ext = os.path.splitext(os.path.basename(path1))[0]
     filename2_without_ext = os.path.splitext(os.path.basename(path2))[0]
     return filename1_without_ext == filename2_without_ext
@@ -103,8 +101,6 @@ class CTUDataset(BaseDataset):
       label = Image.open(label_path)
 
       transform_label = get_transform(self.opt, params, method=Image.NEAREST, normalize=False)
-      # TODO (shiyu) according to this line, it seems that the pixels labeled 1 
-      # belong to the unknown class? Is this true for all datasets that we support loading?
       label_tensor = transform_label(label) * 255.0
       label_tensor[label_tensor == 255] = self.opt.num_labels  # 'unknown' is opt.num_labels
 

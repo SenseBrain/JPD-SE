@@ -1,12 +1,8 @@
 import os
-import sys
 import time
-import argparse
 from collections import OrderedDict
 
 import numpy as np
-import skimage.io as io
-
 import torch
 
 import ctu.parsers
@@ -26,9 +22,6 @@ print('\ntrain options:\n')
 parser.print_options(opt)
 print('\nval options:\n')
 parser.print_options(val_opt)
-
-# (shiyu) for debugging
-# torch.autograd.set_detect_anomaly(True)
 
 # (shiyu) fully deterministic, usually causes slower runtime
 if opt.seed:
@@ -90,21 +83,6 @@ torch.backends.cudnn.benchmark = True if not opt.seed else False
 for epoch in range(trainer.start_epoch, trainer.start_epoch + opt.num_epochs):
   start = time.time()
   for i, x_dict in enumerate(loader):
-    # visualize images as a sanity check 
-    """
-    import skimage.io as io
-    io.imshow(((x_dict['image'][0].detach().cpu().numpy() * np.asarray(opt.normalize_std)[:, np.newaxis, np.newaxis] + np.asarray(opt.normalize_mean)[:, np.newaxis, np.newaxis]) * 255.).transpose(1, 2, 0).astype(np.uint8))
-    io.show()
-    sys.exit()
-    """
-    # print(trainer.model)
-    # print(x_dict['image'].mean())
-    # print(x_dict['image'].std())
-    # FIXME why calling get_eval_loss step causes different training result?
-    # distortion_value = trainer.get_eval_loss(x_dict)
-
-    # note that for toderici2017, the distortion_value obtained from trainer is not equal
-    # to the actual reconstruction distortion. For that, call trainer.get_eval_loss
     distortion_value = trainer.step(x_dict)
     end = time.time()
     if opt.save_dir and epoch == 0 and i == 0:
@@ -119,9 +97,6 @@ for epoch in range(trainer.start_epoch, trainer.start_epoch + opt.num_epochs):
     if opt.save_dir:
       print('validating...', file=open(log_file, 'a'))
     print('\nvalidating...\n')
-    # setting benchmark mode to True causes slower runtime when the input changes size from 
-    # iteration to iteration, per this discussion:
-    # https://discuss.pytorch.org/t/what-does-torch-backends-cudnn-benchmark-do/5936
     torch.backends.cudnn.benchmark = False
     with torch.no_grad():
       distortion_value_total = 0

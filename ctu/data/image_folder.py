@@ -1,14 +1,6 @@
 """
 Modified from:
   https://github.com/NVlabs/SPADE/blob/master/data/image_folder.py
-
-Original comments:
-  ###############################################################################
-  # Code from
-  # https://github.com/pytorch/vision/blob/master/torchvision/datasets/folder.py
-  # Modified the original code so that it also loads images from the current
-  # directory as well as the subdirectories
-  ###############################################################################
 """
 
 import os

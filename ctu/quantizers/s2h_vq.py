@@ -121,7 +121,6 @@ class S2HVQ(nn.Module):
         The discrete code for input x.
     """
     score_mtrx = self._get_score_mtrx(x_mtrx)
-    # TODO: tie-breaking
     _, min_index = torch.min(score_mtrx, dim=-1, keepdim=True)
     x_disc = x_mtrx.new_zeros(
         [x_mtrx.size(0), x_mtrx.size(1), self.code_book.size(0)])
@@ -224,7 +223,6 @@ class S2HVQ(nn.Module):
       code: tensor (shape: (n, code_len)) 
         The discrete integer-sequence code of x.
     """
-    # TODO test this function
     code_raw = self._encode_vctr(x=x, code_len=code_len, train=train)
     _, code = torch.max(code_raw, dim=-1)
     return code
@@ -278,10 +276,6 @@ class S2HVQ(nn.Module):
         centers in the code book if raw is set to true, it contains the index
         of the center with the highest score if raw is false.
     """
-    # TODO deprecate code_len: code_len is something the alg. can infer from the shape
-    # of x and that of the code_book. In that case, only one sanity
-    # check needs to be performed upon receiving x, which is to 
-    # check that x.size(1) can be divided by code_book.size(1).
     if x.size(1) < code_len:
       raise ValueError(
           "x.size(1) must be greater than or equal to code_len, got " +\
@@ -348,7 +342,6 @@ class S2HVQ(nn.Module):
     return cross_entropy_raw.sum()
 
 class S2HVQV2(S2HVQ):
-  # TODO tests
   def __init__(self, **kwargs):
     super(S2HVQV2, self).__init__(**kwargs)
     self.net = nn.Sequential(OrderedDict([

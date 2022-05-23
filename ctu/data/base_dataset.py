@@ -52,8 +52,6 @@ def get_params(opt, size):
 def get_transform(opt, params, method=Image.BICUBIC, normalize_mean=None, normalize_std=None, normalize=True, to_tensor=True):
   transform_list = []
   if 'resize' in opt.preprocess_mode:
-    # NOTE (shiyu) this option always resizes to a square image.
-    # If want to preserve the original aspect ratio, use scale_width or scale_shortside 
     osize = [opt.load_size, opt.load_size]
     transform_list.append(transforms.Resize(osize, interpolation=method))
   elif 'scale_width' in opt.preprocess_mode:
@@ -89,7 +87,6 @@ def get_transform(opt, params, method=Image.BICUBIC, normalize_mean=None, normal
   return transforms.Compose(transform_list)
 
 
-# TODO (shiyu) move preprocessing utils to utils/preprocessing
 def normalize():
   return transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 

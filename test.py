@@ -3,14 +3,12 @@ Modified from:
   https://github.com/NVlabs/SPADE/blob/master/test.py
 """
 
-import sys
 import os
 import time
 from collections import OrderedDict
 
 import numpy as np
 import torch
-import skimage.io as io
 
 import pytorch_msssim
 
@@ -107,7 +105,6 @@ with torch.no_grad():
           try:
             f.write(codes.cpu().numpy().astype(np.uint8).tobytes())
           except AttributeError:
-            # toderici2017 returns a list of codes and sometimes None may be returned in the list as a placeholder
             for code in codes:
               if code is not None:
                 f.write(code.cpu().numpy().astype(np.uint8).tobytes())

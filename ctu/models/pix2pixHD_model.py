@@ -33,7 +33,6 @@ class Pix2PixHDModel(BaseModel):
     parser.add_argument('--binary_mask', action='store_true', help='if specified, fill the semantics regions with ones instead of parts from the original image')
     parser.add_argument('--netE_groups', type=int, default=1, help='depth-wise conv when using semantic masking. Must devide # netE binarizer channel. A simple choice would be = # of semantic channels and set # netE binarizer channel to some integer multiple of # of semantic channels')
     parser.add_argument('--inst_wise_pool', action='store_true', help='if specified, apply instance-wise avg pooling to the output of the visuals encoder. This assumes no_feat_encoding is False')
-    # FIXME --norm flag is buggy
     parser.add_argument('--norm', type=str, default='instance', help='instance normalization or batch normalization')        
     parser.add_argument('--use_dropout', action='store_true', help='use dropout for the generator')
 
@@ -107,7 +106,6 @@ class Pix2PixHDModel(BaseModel):
     super(Pix2PixHDModel, self).__init__(opt)
     if ((not opt.no_feat_encoding and not opt.no_encoder_binarization) or (not opt.no_label_encoding and not opt.no_label_encoder_binarization)) and not opt.no_generator_binarization:
       raise ValueError('Usually you only need to binarize the encoders *or* the generator, but you chose to binarize more than what is needed. Is this what you want?')
-    # TODO (shiyu) could do with new_zeros, etc.
     self.FloatTensor = torch.cuda.FloatTensor if self.use_gpu() \
             else torch.FloatTensor
     self.ByteTensor = torch.cuda.ByteTensor if self.use_gpu() \
@@ -119,10 +117,6 @@ class Pix2PixHDModel(BaseModel):
     # figuring out the in_channels of the models
     if not opt.no_label:
       if opt.no_label_encoding:
-        # TODO seems that setting num_labels to 0 in the original pix2pixHD would cause the model
-        # to use the non-one-hot-coded label map, which does not make sense anyway. So we are 
-        # ignoring the possibility of opt.num_labels being 0
-        # input_nc = opt.num_labels if opt.num_labels != 0 else opt.input_nc
         semantics_nc = opt.num_labels + 1 if opt.contain_dontcare_label else opt.num_labels
       else:
         semantics_nc = opt.label_encoder_out_channels
@@ -314,14 +308,11 @@ class Pix2PixHDModel(BaseModel):
       return save_name
     elif ext == 'j2k':
       img = Image.open(filename)
-      # TODO support >1 quality layers
       img.save(save_name, quality_mode='rates', quality_layers=[quality])
       return save_name
     elif ext == 'bpg':
       # uses the official BPG encoder as PIL does not currently support BPG
       import subprocess
-      # FIXME why is this version buggy?
-      # subprocess.run(['bpgenc', '-q '+quality+' -o '+save_name, filename])
       visualization_name = os.path.splitext(save_name)[0] + '_decoded_from_bpg.png'
       subprocess.run('bpgenc -q '+str(quality)+' -o '+save_name + ' ' + filename, shell=True)
       subprocess.run('bpgdec -o '+ visualization_name + ' ' + save_name, shell=True)
@@ -345,8 +336,6 @@ class Pix2PixHDModel(BaseModel):
     import torchvision.transforms as transforms
     from ctu.utils.misc import tensor2im
 
-    # TODO now this code assumes batch size is 1 as PIL's Image can only handle one image at a time
-    # TODO compress the pre- or post-preprocessing img, which is better? If the former, should perhaps move this piece of code to dataloader before the preprocessings
     img = Image.fromarray(tensor2im(image_tensor=x_dict['image'], opt=self.opt).squeeze())
     img_name = os.path.join(tmp_folder, 'tmp_image.png')
     # not saving to an actual file but a memory buffer
@@ -385,8 +374,6 @@ class Pix2PixHDModel(BaseModel):
 
     # preprocess label map if it exists
     if not self.opt.no_label:
-      # (shiyu) this is much faster on GPU (benchmarked w/ batchsize=1).
-      # So do not convert in dataloader
       label_map = x_dict['label'].long()
       batch_size, _, h, w = label_map.size()
       num_channels = self.opt.num_labels + 1 if self.opt.contain_dontcare_label \
@@ -401,15 +388,12 @@ class Pix2PixHDModel(BaseModel):
 
     # get edges from instance map
     if not self.opt.no_instance:
-      # (shiyu) not feasible to use one-hot repr for instance labels since there are too many classes
       instance_tensor = x_dict['instance']
-      # (shiyu) this is much faster on GPU (benchmarked w/ batchsize=1).
-      # So do not convert in dataloader
       edge_tensor = self.get_edges(instance_tensor)
       if not self.opt.no_label:
         label_tensor = torch.cat((label_tensor, edge_tensor), dim=1)
       else:
-        label_tensor = edge_tensor # (shiyu) does it make more sense to use edge_tensor or instance_tensor or is this case completely useless?
+        label_tensor = edge_tensor 
 
     if self.opt.sem_masking:
       img_tensor = x_dict['image'] if not self.opt.use_compressed else compressed_img
@@ -669,7 +653,6 @@ class Pix2PixHDModel(BaseModel):
 
     # compute semantics-channel-specific distortion
 
-    # TODO to be made into a unit test for both sem_mask and get_sem_wise_distortion
     """
     real_image = torch.tensor([[[[1, 2.]], [[3, 4]]]])
     fake_image = torch.tensor([[[[0, 2.]], [[9, 11]]]])
@@ -685,7 +668,6 @@ class Pix2PixHDModel(BaseModel):
     print(masked_fake)
     """
     
-    # TODO implement MSE
     distortion = torch.abs(masked_real - masked_fake).sum([0, 2, 3]).view(-1, real_image.size(1)).sum(1)
     distortion /= input_label.sum([0, 2, 3]).to(torch.float)
 

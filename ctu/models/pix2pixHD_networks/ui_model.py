@@ -2,7 +2,6 @@
 Modified from:
   https://github.com/NVIDIA/pix2pixHD/blob/master/models/ui_model.py
 """
-# TODO (shiyu) what does this model do?
 import os
 from PIL import Image
 from collections import OrderedDict
