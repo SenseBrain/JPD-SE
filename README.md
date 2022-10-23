@@ -3,6 +3,10 @@ This repo contains the code to perform and evaluate the nerual image compression
 > Duan, Shiyu, Huaijin Chen, and Jinwei Gu. "JPD-SE: High-Level Semantics for Joint Perception-Distortion Enhancement in Image Compression." *IEEE Transactions on Image Processing* 31 (2022): 4405-4416.
 [[pdf]](https://ieeexplore.ieee.org/iel7/83/4358840/09807639.pdf) [[arxiv]](https://arxiv.org/abs/2005.12810)
 
+Some results are provided below, where the "-SE" codecs, i.e., our semantically enhanced models, outperform the originals.
+
+![img1](figures/img1.png)
+
 **Abstract**
 >While humans can effortlessly transform complex visual scenes into simple words and the other way around by leveraging their high-level understanding of the content, conventional or the more recent learned image compression codecs do not seem to utilize the semantic meanings of visual content to their full potential. Moreover, they focus mostly on rate-distortion and tend to underperform in perception quality especially in low bitrate regime, and often disregard the performance of downstream computer vision algorithms, which is a fast-growing consumer group of compressed images in addition to human viewers. In this paper, we (1) present a generic framework that can enable any image codec to leverage high-level semantics and (2) study the joint optimization of perception quality and distortion. Our idea is that given *any codec*, we utilize high-level semantics to augment the low-level visual features extracted by it and produce essentially a new, semantic-aware codec. We propose a three-phase training scheme that teaches semantic-aware codecs to leverage the power of semantic to jointly optimize rate-perception-distortion (R-PD) performance. As an additional benefit, semantic-aware codecs also boost the performance of downstream computer vision algorithms. To validate our claim, we perform extensive empirical evaluations and provide both quantitative and qualitative results.
 
